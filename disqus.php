@@ -1,10 +1,10 @@
 <?php
 /*
-Plugin Name: Disqus Comment System
-Plugin URI: http://disqus.com/
+Plugin Name: CGC Disqus Comment System (Forked)
+Plugin URI: http://cgcookie.com/
 Description: The Disqus comment system replaces your WordPress comment system with your comments hosted and powered by Disqus. Head over to the Comments admin page to set up your DISQUS Comment System.
-Author: Disqus <team@disqus.com>
-Version: 2.74
+Author: Disqus <team@disqus.com>, Brian DiChiara
+Version: 2.74.1
 Author URI: http://disqus.com/
 */
 
@@ -531,7 +531,7 @@ function dsq_image_upload_handler($option_name) {
         // If the uploaded file is the right format
         if(in_array($uploaded_file_type, $allowed_file_types)) {
             // Options array for the wp_handle_upload function. 'test_upload' => false
-            $upload_overrides = array( 'test_form' => false ); 
+            $upload_overrides = array( 'test_form' => false );
             // Handle the upload using WP's wp_handle_upload function. Takes the posted file and an options array
             $uploaded_file = wp_handle_upload($_FILES[$option_name], $upload_overrides);
             // If the wp_handle_upload call returned a local path for the image
@@ -873,7 +873,7 @@ function dsq_plugin_action_links($links, $file) {
         if (!dsq_is_installed()) {
             $settings_link = '<a href="edit-comments.php?page=disqus">'.dsq_i('Configure').'</a>';
         } else {
-            $settings_link = '<a href="edit-comments.php?page=disqus#adv">'.dsq_i('Settings').'</a>';    
+            $settings_link = '<a href="edit-comments.php?page=disqus#adv">'.dsq_i('Settings').'</a>';
         }
         array_unshift($links, $settings_link);
     }
@@ -1494,7 +1494,7 @@ function dsq_install($allow_database_install=true) {
  * Adds a simple WordPress pointer to Comments menu, to remind the user to configure the plugin
  */
 function dsq_enqueue_pointer_script_style( $hook_suffix ) {
-    
+
     // Assume pointer shouldn't be shown
     $enqueue_pointer_script_style = false;
 
@@ -1504,7 +1504,7 @@ function dsq_enqueue_pointer_script_style( $hook_suffix ) {
     // Check if our pointer is not among dismissed ones
     if( !in_array( 'disqus_settings_pointer', $dismissed_pointers ) ) {
         $enqueue_pointer_script_style = true;
-        
+
         // Add footer scripts using callback function
         add_action( 'admin_print_footer_scripts', 'dsq_pointer_print_scripts' );
     }
@@ -1514,7 +1514,7 @@ function dsq_enqueue_pointer_script_style( $hook_suffix ) {
         wp_enqueue_style( 'wp-pointer' );
         wp_enqueue_script( 'wp-pointer' );
     }
-    
+
 }
 if (!dsq_is_installed()) {
     // Only show the pointer when Disqus isn't already configured
@@ -1526,7 +1526,7 @@ function dsq_pointer_print_scripts() {
     $pointer_content  = '<h3>DISQUS needs to be configured</h3>';
     $pointer_content .= '<p>Configure DISQUS by clicking Comments to the left.</p>';
 ?>
-    
+
     <script type="text/javascript">
     //<![CDATA[
     jQuery(document).ready( function($) {
@@ -1563,7 +1563,7 @@ function dsq_install_database($version=0) {
 }
 function dsq_reset_database($version=0) {
     global $wpdb;
-    
+
     if (version_compare($version, '2.49', '>=')) {
         $wpdb->query("DROP INDEX disqus_dupecheck ON `".$wpdb->prefix."commentmeta`;");
     }
@@ -1583,5 +1583,3 @@ function dsq_pre_comment_on_post($comment_post_ID) {
     return $comment_post_ID;
 }
 add_action('pre_comment_on_post', 'dsq_pre_comment_on_post');
-
-?>
